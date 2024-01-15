@@ -1,6 +1,13 @@
 {
-    "name": "swervpaydev/swyftpay-php",
+    "name": "swervpaydev/sdk",
     "description": "PHP Client for Swyftpay",
+    "keywords": [
+        "Swyftpay",
+        "Swervpay",
+        "Card",
+        "Issuing"
+    ],
+    "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
@@ -10,9 +17,13 @@
     },
     "authors": [
         {
-            "name": "Mujhtech",
+            "name": "Muhideen Mujeeb Adeoye",
             "email": "mujeeb.muhideen@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^7.2|^8.0",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.8"
+    }
 }
