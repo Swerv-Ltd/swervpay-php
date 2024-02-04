@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://swyftpay.io" target="_blank">
+  <a href="https://swervpay.co" target="_blank">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://avatars.githubusercontent.com/u/108650375?s=200&v=4">
     <img src="https://avatars.githubusercontent.com/u/108650375?s=200&v=4" width="60" alt="Logo"/>
@@ -11,7 +11,7 @@
 
 <p align="center">
     <br />
-    <a href="https://docs.swyftpay.io" rel="dofollow"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.swervpay.co" rel="dofollow"><strong>Explore the docs »</strong></a>
     <br />
  </p>
   
@@ -20,7 +20,7 @@
     ·
     <a href="https://www.linkedin.com/company/swervltd">Linkedin</a>
     ·
-    <a href="https://docs.swyftpay.io/changelog">Changelog</a>
+    <a href="https://docs.swervpay.co/changelog">Changelog</a>
 </p>
 
 # Installation
