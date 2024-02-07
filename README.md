@@ -7,7 +7,7 @@
   </a>
 </div>
 
-<h1 align="center">PHP Client for Swyftpay</h1>
+<h1 align="center">PHP Client for Swervpay</h1>
 
 <p align="center">
     <br />
@@ -27,7 +27,7 @@
 
 PHP 7.2+ and Composer are required.
 
-To get the latest version of Novu PHP SDK, simply require it:
+To get the latest version of Swervpay PHP SDK, simply require it:
 
 ```bash
 $ composer require swervpaydev/sdk
