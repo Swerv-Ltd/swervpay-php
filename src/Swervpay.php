@@ -11,11 +11,14 @@ use Swervpaydev\SDK\Resources\Other;
 use Swervpaydev\SDK\Resources\Wallet;
 use Swervpaydev\SDK\Resources\Transaction;
 use Swervpaydev\SDK\Resources\Payout;
+use Swervpaydev\SDK\Resources\Webhook;
 
 
 
-class Swyftpay
+class Swervpay
 {
+
+    use HttpRequests;
 
     /**
      * The Fx instance.
@@ -66,6 +69,15 @@ class Swyftpay
      * @var \Swervpaydev\SDK\Resources\Other
      */
     private Other $other;
+
+
+
+    /**
+     * The Webhook instance.
+     *
+     * @var \Swervpaydev\SDK\Resources\Webhook
+     */
+    private Webhook $webhook;
 
 
     /**
@@ -123,6 +135,7 @@ class Swyftpay
         $this->transaction = new Transaction($this);
         $this->payout = new Payout($this);
         $this->other = new Other($this);
+        $this->webhook = new Webhook($this);
     }
 
 
@@ -153,5 +166,101 @@ class Swyftpay
         ]);
 
         return $this;
+    }
+
+
+    /**
+     * Get the Fx instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Fx
+     */
+
+    public function fx()
+    {
+        return $this->fx;
+    }
+
+
+    /**
+     * Get the Card instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Card
+     */
+
+    public function card()
+    {
+        return $this->card;
+    }
+
+
+    /**
+     * Get the Customer instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Customer
+     */
+
+    public function customer()
+    {
+        return $this->customer;
+    }
+
+
+    /**
+     * Get the Wallet instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Wallet
+     */
+
+    public function wallet()
+    {
+        return $this->wallet;
+    }
+
+
+    /**
+     * Get the Transaction instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Transaction
+     */
+
+    public function transaction()
+    {
+        return $this->transaction;
+    }
+
+
+    /**
+     * Get the Payout instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Payout
+     */
+
+    public function payout()
+    {
+        return $this->payout;
+    }
+
+
+    /**
+     * Get the Other instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Other
+     */
+
+    public function other()
+    {
+        return $this->other;
+    }
+
+
+    /**
+     * Get the Webhook instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Webhook
+     */
+
+    public function webhook()
+    {
+        return $this->webhook;
     }
 }
