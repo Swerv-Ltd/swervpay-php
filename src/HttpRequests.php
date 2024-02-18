@@ -15,11 +15,12 @@ trait HttpRequests
      *
      * @param  string  $uri
      * @param  array  $query
+     * @param  array   $headers
      * @return mixed
      */
-    public function get($uri, array $query = [])
+    public function get($uri, array $query = [], array $headers = [])
     {
-        return $this->request('GET', $uri, [], $query);
+        return $this->request('GET', $uri, [], $query, $headers);
     }
 
     /**
@@ -27,11 +28,12 @@ trait HttpRequests
      *
      * @param  string  $uri
      * @param  array  $payload
+     * @param  array   $headers
      * @return mixed
      */
-    public function post($uri, array $payload = [])
+    public function post($uri, array $payload = [], array $headers = [])
     {
-        return $this->request('POST', $uri, $payload);
+        return $this->request('POST', $uri, $payload, [], $headers);
     }
 
     /**
@@ -39,11 +41,12 @@ trait HttpRequests
      *
      * @param  string  $uri
      * @param  array  $payload
+     * @param  array   $headers
      * @return mixed
      */
-    public function put($uri, array $payload = [])
+    public function put($uri, array $payload = [], array $headers = [])
     {
-        return $this->request('PUT', $uri, $payload);
+        return $this->request('PUT', $uri, $payload, [], $headers);
     }
 
     /**
@@ -51,11 +54,12 @@ trait HttpRequests
      *
      * @param  string  $uri
      * @param  array  $payload
+     * @param  array   $headers
      * @return mixed
      */
-    public function patch($uri, array $payload = [])
+    public function patch($uri, array $payload = [], array $headers = [])
     {
-        return $this->request('PATCH', $uri, $payload);
+        return $this->request('PATCH', $uri, $payload, [], $headers);
     }
 
     /**
@@ -63,6 +67,7 @@ trait HttpRequests
      *
      * @param  string  $uri
      * @param  array  $payload
+     * @param  array   $headers
      * @return mixed
      */
     public function delete($uri, array $payload = [])
@@ -75,11 +80,12 @@ trait HttpRequests
      *
      * @param  string  $verb
      * @param  string  $uri
-     * @param  array  $payload
-     * @param  array  $query
+     * @param  array   $headers
+     * @param  array   $payload
+     * @param  array   $query
      * @return mixed
      */
-    protected function request($verb, $uri, array $payload = [], array $query = [])
+    protected function request($verb, $uri,  array $payload = [], array $query = [], array $headers = [])
     {
         if (isset($payload['json'])) {
             $payload = ['json' => $payload['json']];
@@ -91,7 +97,7 @@ trait HttpRequests
             $payload = array_merge($payload, ['query' => $query]);
         }
 
-        $response = $this->client->request($verb, $uri, $payload);
+        $response = $this->client->request($verb, $uri, $headers, $payload);
 
         $statusCode = $response->getStatusCode();
 

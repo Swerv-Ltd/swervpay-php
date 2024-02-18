@@ -4,6 +4,7 @@ namespace Swervpaydev\SDK;
 
 
 use GuzzleHttp\Client as HttpClient;
+use Swervpaydev\SDK\Models\AccessTokenModel;
 use Swervpaydev\SDK\Resources\Card;
 use Swervpaydev\SDK\Resources\Customer;
 use Swervpaydev\SDK\Resources\Fx;
@@ -89,7 +90,7 @@ class Swervpay
 
 
     /**
-     * The base URI for the Swyftpay API.
+     * The base URI for the Swervpay API.
      *
      * @var string
      */
@@ -98,7 +99,7 @@ class Swervpay
 
 
     /**
-     * The secret key for the Swyftpay API.
+     * The secret key for the Swervpay API.
      *
      * @var string
      */
@@ -106,7 +107,7 @@ class Swervpay
 
 
     /**
-     * The business ID for the Swyftpay API.
+     * The business ID for the Swervpay API.
      *
      * @var string
      */
@@ -114,7 +115,15 @@ class Swervpay
 
 
     /**
-     * Create a new Swyftpay instance.
+     * The access token for the Swervpay API.
+     *
+     * @var AccessTokenModel
+     */
+    protected $accessToken;
+
+
+    /**
+     * Create a new Swervpay instance.
      *
      * @param  array  $config
      * @return void
@@ -127,6 +136,10 @@ class Swervpay
         } else {
             throw new \Exception('Please provide a valid config array');
         }
+
+        $this->setAccessToken();
+
+        $this->setConfig($config);
 
         $this->fx = new Fx($this);
         $this->card = new Card($this);
@@ -143,14 +156,14 @@ class Swervpay
 
 
     /**
-     * Sets the configuration for the Swyftpay API client.
+     * Sets the configuration for the Swervpay API client.
      *
      * @param array $config The configuration array containing the base URI, secret key, and business ID.
-     * @return $this The current instance of the Swyftpay.
+     * @return $this The current instance of the Swervpay.
      */
     public function setConfig($config)
     {
-        $this->baseUri = $config['base_uri'] ?? 'https://api.swyftpay.com/api/v1/';
+        $this->baseUri = $config['base_uri'] ?? 'https://api.swervpay.co/api/v1/';
         $this->secretKey = $config['secret_key'];
         $this->businessId = $config['business_id'];
 
@@ -159,11 +172,24 @@ class Swervpay
             'base_uri' => $this->baseUri,
             'http_errors' => false,
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->secretKey,
+                'Authorization' => 'Bearer ' . $this->accessToken->access_token,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
+                'User-Agent' => 'Swervpay/PHPSdk',
             ],
         ]);
+
+        return $this;
+    }
+
+
+    public function setAccessToken()
+    {
+        $res = $this->post('auth', [], [
+            'Authorization' => 'Basic ' . base64_encode($this->businessId . ':' . $this->secretKey),
+        ])['data'];
+
+        $this->accessToken = new AccessTokenModel($res);
 
         return $this;
     }

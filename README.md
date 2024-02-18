@@ -35,17 +35,21 @@ $ composer require swervpaydev/sdk
 
 # Configuration
 
-Import the Swyftpay class and create a new instance with your secret_key and business_id:
+Import the Swervpay class and create a new instance with your secret_key and business_id:
 
 ```php
-use Swervpaydev\SDK\Swyftpay;
+use Swervpaydev\SDK\Swervpay;
 
 $config = [
     'secret_key' => '<SECRET_KEY>',
     'business_id' => '<BUSINESS_ID>'
 ];
 
-$swyftpay = new Swyftpay($config);
+$swervpay = new Swervpay($config);
 ```
 
 Replace <SECRET_KEY> and <BUSINESS_ID> with your actual secret key and business ID.
+
+## Documentation
+
+See [docs for PHP here](https://docs.swervpay.co/sdks/php)
