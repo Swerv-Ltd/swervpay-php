@@ -22,7 +22,6 @@ class Model
     {
         $this->attributes = $attributes;
 
-
         $this->fill();
     }
 

@@ -1,12 +1,9 @@
 <?php
 
 namespace Swervpaydev\SDK\Models;
-
-use Swervpaydev\SDK\Models\Model;
-
 /**
  * 
- * Represents a success response object.
+ * Represents a success response response object.
  */
 class SuccessMessage extends Model
 {

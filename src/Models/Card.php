@@ -2,11 +2,9 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
 
 /** 
- * Represents a card object.
+ * Represents a card response object.
  */
 class Card extends Model
 {
@@ -41,11 +39,6 @@ class Card extends Model
     public $balance;
 
     /**
-     * @var int $business_id The ID of the associated business.
-     */
-    public $business_id;
-
-    /**
      * @var string $card_number The card number.
      */
     public $card_number;
@@ -59,11 +52,6 @@ class Card extends Model
      * @var string $currency The currency of the card.
      */
     public $currency;
-
-    /**
-     * @var int $customerid The ID of the associated customer.
-     */
-    public $customerid;
 
     /**
      * @var string $cvv The CVV code of the card.

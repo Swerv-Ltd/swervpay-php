@@ -2,12 +2,9 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
-
 /**
  * 
- * Represents a bank object.
+ * Represents a bank response object.
  */
 class Bank extends Model
 {

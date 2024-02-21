@@ -2,7 +2,7 @@
 
 namespace Swervpaydev\SDK\Resources;
 
-use Swervpaydev\SDK\Models\Customer as ModelsCustomer;
+use Swervpaydev\SDK\Models\Customer as CustomerModel;
 use Swervpaydev\SDK\Swervpay;
 use Swervpaydev\SDK\Models\SuccessMessage;
 
@@ -13,12 +13,12 @@ class Customer
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
 
@@ -26,13 +26,14 @@ class Customer
      * Creates a new customer.
      *
      * @param array $data The customer data.
-     * @return SuccessMessage The success message.
+     * @return CustomerModel The success message.
+     * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): CustomerModel
     {
-        $res = $this->client->post('customers', $data)['data'];
+        $res = $this->swervpay->post('customers', $data);
 
-        return new SuccessMessage($res);
+        return new CustomerModel($res);
     }
 
     /**
@@ -41,10 +42,11 @@ class Customer
      * @param string $id The customer ID.
      * @param array $data The updated customer data.
      * @return SuccessMessage The success message.
+     * @throws \Exception
      */
-    public function update(string $id, array $data)
+    public function update(string $id, array $data): SuccessMessage
     {
-        $res = $this->client->post("customers/{$id}/update", $data)['data'];
+        $res = $this->swervpay->post("customers/{$id}/update", $data);
 
         return new SuccessMessage($res);
     }
@@ -55,10 +57,11 @@ class Customer
      * @param string $id The customer ID.
      * @param array $data The KYC data.
      * @return SuccessMessage The success message.
+     * @throws \Exception
      */
-    public function kyc(string $id, array $data)
+    public function kyc(string $id, array $data): SuccessMessage
     {
-        $res = $this->client->post("customers/{$id}/kyc", $data)['data'];
+        $res = $this->swervpay->post("customers/{$id}/kyc", $data);
 
         return new SuccessMessage($res);
     }
@@ -67,20 +70,22 @@ class Customer
      * Retrieves a customer by ID.
      *
      * @param string $id The customer ID.
-     * @return ModelsCustomer The customer model.
+     * @return CustomerModel The customer model.
+     * @throws \Exception
      */
-    public function get(string $id)
+    public function get(string $id) : CustomerModel
     {
-        $res =  $this->client->get("customers/{$id}")['data'];
+        $res =  $this->swervpay->get("customers/{$id}");
 
-        return new ModelsCustomer($res);
+        return new CustomerModel($res);
     }
 
     /**
      * Retrieves a list of customers.
      *
      * @param array $query The query parameters.
-     * @return ModelsCustomer The customer model.
+     * @return CustomerModel The customer model.
+     * @throws \Exception
      */
     public function gets(array $query = [])
     {
@@ -90,9 +95,8 @@ class Customer
             $uri .= '?' . http_build_query($query);
         }
 
+        $res = $this->swervpay->get($uri);
 
-        $res = $this->client->get($uri)['data'];
-
-        return new ModelsCustomer($res);
+        return new CustomerModel($res);
     }
 }

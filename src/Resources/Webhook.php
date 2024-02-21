@@ -15,12 +15,12 @@ class Webhook
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
     /**
@@ -28,10 +28,11 @@ class Webhook
      *
      * @param string $id The ID of the webhook log to retry.
      * @return SuccessMessage The success message indicating the retry status.
+     * @throws \Exception
      */
-    public function retry(string $id)
+    public function retry(string $id): SuccessMessage
     {
-        $res = $this->client->post("webhook/{$id}/retry")['data'];
+        $res = $this->swervpay->post("webhook/{$id}/retry");
 
         return new SuccessMessage($res);
     }
@@ -42,10 +43,11 @@ class Webhook
      *
      * @param string $id The ID of the webhook to test.
      * @return SuccessMessage The success message response.
+     * @throws \Exception
      */
-    public function test(string $id)
+    public function test(string $id) : SuccessMessage
     {
-        $res = $this->client->post("webhook/{$id}/test", [])['data'];
+        $res = $this->swervpay->post("webhook/{$id}/test", []);
         return new SuccessMessage($res);
     }
 }

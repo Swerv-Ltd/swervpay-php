@@ -2,9 +2,11 @@
 
 namespace Swervpaydev\SDK\Resources;
 
-use Swervpaydev\SDK\Models\Card as ModelsCard;
+
 use Swervpaydev\SDK\Swervpay;
+use Swervpaydev\SDK\Models\Card as CardModel;
 use Swervpaydev\SDK\Models\SuccessMessage;
+use Swervpaydev\SDK\Models\CreateCard;
 
 class Card
 {
@@ -14,12 +16,12 @@ class Card
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
 
@@ -27,13 +29,14 @@ class Card
      * Creates a new card.
      *
      * @param array $data The card data.
-     * @return SuccessMessage The success message.
+     * @return CreateCard The create card response object.
+     * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): CreateCard
     {
-        $res = $this->client->post('cards', $data)['data'];
+        $res = $this->swervpay->post('cards', $data);
 
-        return new SuccessMessage($res);
+        return new CreateCard($res);
     }
 
     /**
@@ -43,9 +46,9 @@ class Card
      * @param array $data The funding data.
      * @return SuccessMessage The success message.
      */
-    public function fund(string $id, array $data)
+    public function fund(string $id, array $data): SuccessMessage
     {
-        $res = $this->client->post("cards/{$id}/fund", $data)['data'];
+        $res = $this->swervpay->post("cards/{$id}/fund", $data);
 
         return new SuccessMessage($res);
     }
@@ -56,10 +59,11 @@ class Card
      * @param string $id The card ID.
      * @param array $data The withdrawal data.
      * @return SuccessMessage The success message.
+     * @throws \Exception
      */
     public function withdraw(string $id, array $data)
     {
-        $res = $this->client->post("cards/{$id}/withdraw", $data)['data'];
+        $res = $this->swervpay->post("cards/{$id}/withdraw", $data);
 
         return new SuccessMessage($res);
     }
@@ -69,10 +73,11 @@ class Card
      *
      * @param string $id The card ID.
      * @return SuccessMessage The success message.
+     * @throws \Exception
      */
     public function terminate(string $id)
     {
-        $res = $this->client->post("cards/{$id}/terminate", [])['data'];
+        $res = $this->swervpay->post("cards/{$id}/terminate", []);
 
         return new SuccessMessage($res);
     }
@@ -82,10 +87,11 @@ class Card
      *
      * @param string $id The card ID.
      * @return SuccessMessage The success message.
+     * @throws \Exception
      */
     public function freeze(string $id)
     {
-        $res = $this->client->post("cards/{$id}/freeze", [])['data'];
+        $res = $this->swervpay->post("cards/{$id}/freeze", []);
 
         return new SuccessMessage($res);
     }
@@ -94,20 +100,22 @@ class Card
      * Retrieves a card.
      *
      * @param string $id The card ID.
-     * @return ModelsCard The card model.
+     * @return CardModel The card model.
+     * @throws \Exception
      */
     public function get(string $id)
     {
-        $res = $this->client->get("cards/{$id}")['data'];
+        $res = $this->swervpay->get("cards/{$id}");
 
-        return new ModelsCard($res);
+        return new CardModel($res);
     }
 
     /**
      * Retrieves multiple cards.
      *
      * @param array $query The query parameters.
-     * @return ModelsCard The card model.
+     * @return CardModel The card model.
+     * @throws \Exception
      */
     public function gets(array $query = [])
     {
@@ -118,8 +126,8 @@ class Card
             $uri .= '?' . http_build_query($query);
         }
 
-        $res = $this->client->get($uri)['data'];
+        $res = $this->swervpay->get($uri);
 
-        return new ModelsCard($res);
+        return new CardModel($res);
     }
 }

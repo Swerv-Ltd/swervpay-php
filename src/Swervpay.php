@@ -4,7 +4,6 @@ namespace Swervpaydev\SDK;
 
 
 use GuzzleHttp\Client as HttpClient;
-use Swervpaydev\SDK\Models\AccessTokenModel;
 use Swervpaydev\SDK\Resources\Card;
 use Swervpaydev\SDK\Resources\Customer;
 use Swervpaydev\SDK\Resources\Fx;
@@ -13,73 +12,23 @@ use Swervpaydev\SDK\Resources\Wallet;
 use Swervpaydev\SDK\Resources\Transaction;
 use Swervpaydev\SDK\Resources\Payout;
 use Swervpaydev\SDK\Resources\Webhook;
+use Swervpaydev\SDK\Models\AccessToken as AccessTokenModel;
+use Exception;
+use Psr\Http\Message\ResponseInterface;
+use Swervpaydev\SDK\Exceptions\Timeout;
+use Swervpaydev\SDK\Exceptions\NotFound;
+use Swervpaydev\SDK\Exceptions\FailedAction;
 
 
 
+/**
+ * Class Swervpay
+ * 
+ * This class represents the Swervpay API client.
+ * It provides methods for interacting with the Swervpay API.
+ */
 class Swervpay
 {
-
-    use HttpRequests;
-
-    /**
-     * The Fx instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Fx
-     */
-    private Fx  $fx;
-
-    /**
-     * The Card instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Card
-     */
-    private Card $card;
-
-    /**
-     * The Customer instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Customer
-     */
-    private Customer $customer;
-
-    /**
-     * The Wallet instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Wallet
-     */
-    private Wallet $wallet;
-
-    /**
-     * The Transaction instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Transaction
-     */
-    private Transaction $transaction;
-
-    /**
-     * The Payout instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Payout
-     */
-    private Payout $payout;
-
-
-    /**
-     * The Other instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Other
-     */
-    private Other $other;
-
-
-
-    /**
-     * The Webhook instance.
-     *
-     * @var \Swervpaydev\SDK\Resources\Webhook
-     */
-    private Webhook $webhook;
-
 
     /**
      * The Guzzle HTTP Client instance.
@@ -95,7 +44,6 @@ class Swervpay
      * @var string
      */
     protected $baseUri;
-
 
 
     /**
@@ -140,19 +88,7 @@ class Swervpay
         $this->setAccessToken();
 
         $this->setConfig($config);
-
-        $this->fx = new Fx($this);
-        $this->card = new Card($this);
-        $this->customer = new Customer($this);
-        $this->wallet = new Wallet($this);
-        $this->transaction = new Transaction($this);
-        $this->payout = new Payout($this);
-        $this->other = new Other($this);
-        $this->webhook = new Webhook($this);
     }
-
-
-
 
 
     /**
@@ -167,27 +103,49 @@ class Swervpay
         $this->secretKey = $config['secret_key'];
         $this->businessId = $config['business_id'];
 
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'Swervpay/PHP-Sdk',
+        ];
+
+        if ($this->accessToken != null && $this->accessToken->access_token != null) {
+            $headers['Authorization'] = 'Bearer ' . $this->accessToken->access_token;
+        } else {
+            $base64 = base64_encode($this->businessId . ':' . $this->secretKey);
+
+            $headers['Authorization'] = 'Basic ' . $base64;
+        }
 
         $this->client = new HttpClient([
             'base_uri' => $this->baseUri,
             'http_errors' => false,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->accessToken->access_token,
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'User-Agent' => 'Swervpay/PHPSdk',
-            ],
+            'headers' => $headers,
         ]);
 
         return $this;
     }
 
 
+    /**
+     * Get the access token.
+     *
+     * @return AccessTokenModel The access token.
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Set the access token.
+     *
+     * @return $this The current instance of Swervpay.
+     */
     public function setAccessToken()
     {
-        $res = $this->post('auth', [], [
-            'Authorization' => 'Basic ' . base64_encode($this->businessId . ':' . $this->secretKey),
-        ])['data'];
+
+        $res = $this->post('auth', [], []);
 
         $this->accessToken = new AccessTokenModel($res);
 
@@ -201,9 +159,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Fx
      */
 
-    public function fx()
+    public function fx(): Fx
     {
-        return $this->fx;
+        return new Fx($this);
     }
 
 
@@ -213,9 +171,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Card
      */
 
-    public function card()
+    public function card(): Card
     {
-        return $this->card;
+        return new Card($this);
     }
 
 
@@ -225,9 +183,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Customer
      */
 
-    public function customer()
+    public function customer(): Customer
     {
-        return $this->customer;
+        return new Customer($this);
     }
 
 
@@ -237,9 +195,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Wallet
      */
 
-    public function wallet()
+    public function wallet(): Wallet
     {
-        return $this->wallet;
+        return new Wallet($this);
     }
 
 
@@ -249,9 +207,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Transaction
      */
 
-    public function transaction()
+    public function transaction(): Transaction
     {
-        return $this->transaction;
+        return new Transaction($this);
     }
 
 
@@ -261,9 +219,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Payout
      */
 
-    public function payout()
+    public function payout(): Payout
     {
-        return $this->payout;
+        return new Payout($this);
     }
 
 
@@ -273,9 +231,9 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Other
      */
 
-    public function other()
+    public function other(): Other
     {
-        return $this->other;
+        return new Other($this);
     }
 
 
@@ -285,8 +243,170 @@ class Swervpay
      * @return \Swervpaydev\SDK\Resources\Webhook
      */
 
-    public function webhook()
+    public function webhook(): Webhook
     {
-        return $this->webhook;
+        return new Webhook($this);
+    }
+
+
+    /**
+     * Make a GET request to Swervpay servers and return the response.
+     *
+     * @param  string  $uri
+     * @param  array  $query
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function get($uri, array $query = [], array $headers = [])
+    {
+        return $this->request('GET', $uri, [], $query, $headers);
+    }
+
+    /**
+     * Make a POST request to Swervpay servers and return the response.
+     *
+     * @param  string  $uri
+     * @param  array  $payload
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function post($uri, array $payload = [], array $headers = [])
+    {
+        return $this->request('POST', $uri, $payload, [], $headers);
+    }
+
+    /**
+     * Make a PUT request to Swervpay servers and return the response.
+     *
+     * @param  string  $uri
+     * @param  array  $payload
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function put($uri, array $payload = [], array $headers = [])
+    {
+        return $this->request('PUT', $uri, $payload, [], $headers);
+    }
+
+    /**
+     * Make a PATCH request to Swervpay servers and return the response.
+     *
+     * @param  string  $uri
+     * @param  array  $payload
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function patch($uri, array $payload = [], array $headers = [])
+    {
+        return $this->request('PATCH', $uri, $payload, [], $headers);
+    }
+
+    /**
+     * Make a DELETE request to Swervpay servers and return the response.
+     *
+     * @param  string  $uri
+     * @param  array  $payload
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function delete($uri, array $payload = [])
+    {
+        return $this->request('DELETE', $uri, $payload);
+    }
+
+    /**
+     * Make request to Swervpay servers and return the response.
+     *
+     * @param  string  $verb
+     * @param  string  $uri
+     * @param  array   $headers
+     * @param  array   $payload
+     * @param  array   $query
+     * @return mixed
+     */
+    protected function request($verb, $uri,  array $payload = [], array $query = [], array $headers = [])
+    {
+        if (isset($payload['json'])) {
+            $payload = ['json' => $payload['json']];
+        } else {
+            $payload = empty($payload) ? [] : ['form_params' => $payload];
+        }
+
+        if (!empty($query)) {
+            $payload = array_merge($payload, ['query' => $query]);
+        }
+
+        $response = $this->client->request($verb, $uri, $headers, $payload);
+
+        $statusCode = $response->getStatusCode();
+
+        if ($statusCode < 200 || $statusCode > 299) {
+            return $this->handleRequestError($response);
+        }
+
+        $responseBody = (string) $response->getBody();
+
+        return json_decode($responseBody, true) ?: $responseBody;
+    }
+
+    /**
+     * Handle the request error.
+     *
+     * @param  \Psr\Http\Message\ResponseInterface  $response
+     * @return void
+     *
+     * @throws \Exception
+     * @throws \Swervpaydev\SDK\Exceptions\FailedAction
+     * @throws \Swervpaydev\SDK\Exceptions\NotFound
+     */
+    protected function handleRequestError(ResponseInterface $response)
+    {
+
+        if ($response->getStatusCode() == 404) {
+            throw new NotFound();
+        }
+
+        if ($response->getStatusCode() == 400) {
+            throw new FailedAction((string) $response->getBody());
+        }
+
+        throw new Exception((string) $response->getBody());
+    }
+
+    /**
+     * Retry the callback or fail after x seconds.
+     *
+     * @param  int  $timeout
+     * @param  callable  $callback
+     * @param  int  $sleep
+     * @return mixed
+     *
+     * @throws \Swervpaydev\SDK\Exceptions\Timeout
+     */
+    public function retry($timeout, $callback, $sleep = 5)
+    {
+        $start = time();
+
+        beginning:
+
+        if ($output = $callback()) {
+            return $output;
+        }
+
+        if (time() - $start < $timeout) {
+            sleep($sleep);
+
+            goto beginning;
+        }
+
+        if ($output === null || $output === false) {
+            $output = [];
+        }
+
+        if (!is_array($output)) {
+            $output = [$output];
+        }
+
+        throw new Timeout($output);
     }
 }

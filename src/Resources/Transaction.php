@@ -2,7 +2,7 @@
 
 namespace Swervpaydev\SDK\Resources;
 
-use Swervpaydev\SDK\Models\Transaction as ModelsTransaction;
+use Swervpaydev\SDK\Models\Transaction as TransactionModel;
 use Swervpaydev\SDK\Swervpay;
 
 
@@ -13,25 +13,26 @@ class Transaction
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
     /**
      * Get a transaction by its ID.
      *
      * @param string $id The ID of the transaction.
-     * @return ModelsTransaction The transaction object.
+     * @return TransactionModel The transaction object.
+     * @throws \Exception
      */
     public function get(string $id)
     {
-        $res =  $this->client->get("transactions/{$id}")['data'];
+        $res =  $this->swervpay->get("transactions/{$id}");
 
-        return new ModelsTransaction($res);
+        return new TransactionModel($res);
     }
 
 
@@ -39,9 +40,10 @@ class Transaction
      * Retrieve multiple transactions.
      *
      * @param array $query Additional query parameters (optional).
-     * @return ModelsTransaction The transaction model.
+     * @return TransactionModel The transaction model.
+     * @throws \Exception
      */
-    public function gets(array $query = [])
+    public function gets(array $query = []): TransactionModel
     {
 
         $uri = "transactions";
@@ -51,8 +53,8 @@ class Transaction
         }
 
 
-        $res = $this->client->get($uri)['data'];
+        $res = $this->swervpay->get($uri);
 
-        return new ModelsTransaction($res);
+        return new TransactionModel($res);
     }
 }

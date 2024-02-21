@@ -2,10 +2,8 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
 /**
- * Represents a wallet model.
+ * Represents a wallet response object.
  */
 class Wallet extends Model
 {
@@ -23,11 +21,6 @@ class Wallet extends Model
      * @var string The account type associated with the wallet.
      */
     public $account_type;
-
-    /**
-     * @var string The address associated with the wallet.
-     */
-    public $address;
 
     /**
      * @var float The balance of the wallet.
@@ -50,11 +43,6 @@ class Wallet extends Model
     public $bank_name;
 
     /**
-     * @var int The business ID associated with the wallet.
-     */
-    public $business_id;
-
-    /**
      * @var string The date and time the wallet was created.
      */
     public $created_at;
@@ -68,11 +56,6 @@ class Wallet extends Model
      * @var int The ID of the wallet.
      */
     public $id;
-
-    /**
-     * @var int The ID of the parent wallet.
-     */
-    public $parent_wallet_id;
 
     /**
      * @var float The pending balance of the wallet.

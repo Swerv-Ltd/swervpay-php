@@ -14,22 +14,23 @@ class Other
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
     /**
      * Retrieve a list of banks.
      *
      * @return Bank
+     * @throws \Exception
      */
-    public function banks()
+    public function banks(): Bank
     {
-        $res = $this->client->get('banks')['data'];
+        $res = $this->swervpay->get('banks');
 
         return new Bank($res);
     }
@@ -40,10 +41,11 @@ class Other
      *
      * @param array $data The data containing the account number to be resolved.
      * @return ResolveAccount The resolved account information.
+     * @throws \Exception
      */
-    public function resolve_account_number(array $data)
+    public function resolve_account_number(array $data): ResolveAccount
     {
-        $res = $this->client->post('resolve-account-number', $data)['data'];
+        $res = $this->swervpay->post('resolve-account-number', $data);
 
         return new ResolveAccount($res);
     }

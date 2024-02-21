@@ -3,8 +3,8 @@
 namespace Swervpaydev\SDK\Resources;
 
 use Swervpaydev\SDK\Swervpay;
-use Swervpaydev\SDK\Models\SuccessMessage;
 use Swervpaydev\SDK\Models\Transaction;
+use Swervpaydev\SDK\Models\CreatePayout;
 
 class Payout
 {
@@ -13,25 +13,26 @@ class Payout
      *
      * @var \Swervpaydev\SDK\Swervpay
      */
-    protected $client;
+    protected $swervpay;
 
 
     public function __construct(Swervpay $swervpay)
     {
-        $this->client = $swervpay->client;
+        $this->swervpay = $swervpay;
     }
 
     /**
      * Create a new payout.
      *
      * @param array $data The data for creating the payout.
-     * @return SuccessMessage The success message object.
+     * @return CreatePayout The create payout response object.
+     * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): CreatePayout
     {
-        $res = $this->client->post('payouts', $data)['data'];
+        $res = $this->swervpay->post('payouts', $data);
 
-        return new SuccessMessage($res);
+        return new CreatePayout($res);
     }
 
 
@@ -40,10 +41,11 @@ class Payout
      *
      * @param string $id The ID of the payout to retrieve.
      * @return Transaction The retrieved payout as a Transaction object.
+     * @throws \Exception
      */
-    public function get(string $id)
+    public function get(string $id): Transaction
     {
-        $res = $this->client->get("/payouts/{$id}")['data'];
+        $res = $this->swervpay->get("/payouts/{$id}");
 
         return new Transaction($res);
     }

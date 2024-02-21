@@ -3,11 +3,9 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
 /**
  * 
- * Represents a resolve account object.
+ * Represents a resolve account response object.
  */
 class ResolveAccount extends Model
 {

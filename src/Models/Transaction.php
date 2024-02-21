@@ -2,12 +2,9 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
-
 /**
  * 
- * Represents a transaction object.
+ * Represents a transaction response object.
  */
 class Transaction extends Model
 {
@@ -27,11 +24,6 @@ class Transaction extends Model
     public $amount;
 
     /**
-     * @var int $asset_iD The ID of the asset.
-     */
-    public $asset_iD;
-
-    /**
      * @var string $bank_code The bank code.
      */
     public $bank_code;
@@ -40,11 +32,6 @@ class Transaction extends Model
      * @var string $bank_name The name of the bank.
      */
     public $bank_name;
-
-    /**
-     * @var int $business_id The ID of the business.
-     */
-    public $business_id;
 
     /**
      * @var string $category The category of the wallet.
@@ -60,11 +47,6 @@ class Transaction extends Model
      * @var string $created_at The creation date of the wallet.
      */
     public $created_at;
-
-    /**
-     * @var int $customer_iD The ID of the customer.
-     */
-    public $customer_iD;
 
     /**
      * @var string $detail The details of the wallet.
@@ -107,11 +89,6 @@ class Transaction extends Model
     public $status;
 
     /**
-     * @var int $sub_wallet_id The ID of the sub wallet.
-     */
-    public $sub_wallet_id;
-
-    /**
      * @var string $type The type of the wallet.
      */
     public $type;
@@ -120,9 +97,4 @@ class Transaction extends Model
      * @var string $updated_at The last updated date of the wallet.
      */
     public $updated_at;
-
-    /**
-     * @var int $wallet_id The ID of the wallet.
-     */
-    public $wallet_id;
 }

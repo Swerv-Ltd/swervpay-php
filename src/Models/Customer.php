@@ -2,17 +2,11 @@
 
 namespace Swervpaydev\SDK\Models;
 
-use Swervpaydev\SDK\Models\Model;
-
 /**
- * Represents a customer object.
+ * Represents a customer response object.
  */
 class Customer extends Model
 {
-    /**
-     * @var int $business_id The ID of the business associated with the customer.
-     */
-    public $business_id;
 
     /**
      * @var string $country The country of the customer.
