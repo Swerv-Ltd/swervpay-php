@@ -67,6 +67,20 @@ class Customer
     }
 
     /**
+     * Blacklist a customer.
+     *
+     * @param string $id The customer ID.
+     * @return SuccessMessage The success message.
+     * @throws \Exception
+     */
+    public function blacklist(string $id): SuccessMessage
+    {
+        $res = $this->swervpay->post("customers/{$id}/blacklist", []);
+
+        return new SuccessMessage($res);
+    }
+
+    /**
      * Retrieves a customer by ID.
      *
      * @param string $id The customer ID.

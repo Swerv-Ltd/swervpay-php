@@ -7,6 +7,7 @@ use Swervpaydev\SDK\Swervpay;
 use Swervpaydev\SDK\Models\Card as CardModel;
 use Swervpaydev\SDK\Models\SuccessMessage;
 use Swervpaydev\SDK\Models\CreateCard;
+use Swervpaydev\SDK\Models\CardTransaction;
 
 class Card
 {
@@ -129,5 +130,42 @@ class Card
         $res = $this->swervpay->get($uri);
 
         return new CardModel($res);
+    }
+
+
+    /**
+     * Retrieves a specific transaction of a card.
+     *
+     * @param string $id The card ID.
+     * @param string $transactionId The transaction ID.
+     * @return CardTransaction The card transaction object.
+     * @throws \Exception
+     */
+    public function transaction(string $id, string $transactionId): CardTransaction
+    {
+        $res = $this->swervpay->get("cards/{$id}/transactions/{$transactionId}", []);
+
+        return new CardTransaction($res);
+    }
+
+    /**
+     * Retrieves all transactions of a card.
+     *
+     * @param string $id The card ID.
+     * @param array $query (optional) The query parameters to filter the transactions.
+     * @return CardTransaction The card transaction object.
+     * @throws \Exception
+     */
+    public function transactions(string $id, array $query = []): CardTransaction
+    {
+        $uri = "cards/{$id}/transactions";
+
+        if (!empty($query)) {
+            $uri .= '?' . http_build_query($query);
+        }
+
+        $res = $this->swervpay->get($uri);
+
+        return new CardTransaction($res);
     }
 }
