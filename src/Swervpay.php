@@ -12,6 +12,7 @@ use Swervpaydev\SDK\Resources\Wallet;
 use Swervpaydev\SDK\Resources\Transaction;
 use Swervpaydev\SDK\Resources\Payout;
 use Swervpaydev\SDK\Resources\Webhook;
+use Swervpaydev\SDK\Resources\Collection;
 use Swervpaydev\SDK\Models\AccessToken as AccessTokenModel;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -100,6 +101,11 @@ class Swervpay
     public function setConfig($config)
     {
         $this->baseUri = $config['base_uri'] ?? 'https://api.swervpay.co/api/v1/';
+
+        if (isset($config['sandbox']) && $config['sandbox'] == true) {
+            $this->baseUri = 'https://sandbox.swervpay.co/api/v1/';
+        }
+
         $this->secretKey = $config['secret_key'];
         $this->businessId = $config['business_id'];
 
@@ -247,6 +253,18 @@ class Swervpay
     {
         return new Webhook($this);
     }
+
+    /**
+     * Get the Collection instance.
+     *
+     * @return \Swervpaydev\SDK\Resources\Collection
+     */
+
+    public function collection(): Collection
+    {
+        return new Collection($this);
+    }
+
 
 
     /**
